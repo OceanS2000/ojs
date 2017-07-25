@@ -80,7 +80,7 @@ int main()
 		if (k) {printf("unsolvable\n");continue;}//可解性计算。详见Wolfram MathWorld对此的讨论
 		for(bound = s.H(); !flag; bound = dfs(0, -1));//主循环。为了缩短长度丧心病狂……
 		for(int i = 0; i < bound; i++)
-			putchar(d[p[i]]);//输出解
+			putchar(d[step[i]]);//输出解
 		putchar('\n');
 	}
 	return 0;
