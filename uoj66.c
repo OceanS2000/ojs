@@ -1,16 +1,11 @@
 #include<stdio.h>
 
-int happiness(int n)
+inline int happiness(int n)
 {
-	int exptwo[32], i, hap = 0;
-	for(i = 0; i < 32; i++)
+	int hap = n;
+	while(n != 0)
 	{
-		if(i == 0){exptwo[i] = 1; continue;}
-		exptwo[i] = 2*exptwo[i - 1];
-	}
-	for(i = 0; i < 32 && n > 0; i++)
-	{
-		if(n % 2 != 0) hap += (exptwo[i] - 1);
+		if(n % 2 != 0) hap--;
 		n /= 2;
 	}
 	return hap;
