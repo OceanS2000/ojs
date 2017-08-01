@@ -33,3 +33,5 @@
 
 # Backup Files
 *~
+#pycache
+__pycache__
