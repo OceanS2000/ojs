@@ -61,10 +61,10 @@ class Treap:
             node.val = val
             return node
         if(self.__private__getP(node) < self.__private__getP(node.left)):
-            self.__private__rotateR(node)
+            node = self.__private__rotateR(node)
         if(self.__private__getP(node) < self.__private__getP(node.right)):
-            self.__private__rotateL(node)
-        node.size = self.getsize(node.left) + self.getsize(node.right) + 1
+            node = self.__private__rotateL(node)
+        node.size = self.__private__getsize(node.left) + self.__private__getsize(node.right) + 1
         return node
 
     def __getitem__(self, key):
@@ -90,7 +90,7 @@ class Treap:
         if(node.right == None):
             return node.left
         if(node.left.key > node.right.key):
-            self.__private__RotateR(node)
+            self.__private__rotateR(node)
             
     def __len__(self):
         return self.__private__getsize(self.root)
@@ -102,10 +102,18 @@ class Treap:
         return self.__private__getsize(self.root) == 0
 
     def min(self):
-        pass
+        return self.__private__min(self.root)
+    def __private__min(self, node):
+        if(node.left == None):
+            return node.key
+        return self.__private__min(node.left)
 
     def max(self):
-        pass
+        return self.__private__max(self.root)
+    def __private__max(self, node):
+        if(node.right == None):
+            return node.key
+        return self.__private__max(node.right)
 
     def rank(self, key):
         pass
@@ -114,10 +122,22 @@ class Treap:
         pass
     
     def size(self):
-        return getsize(self.root)
+        return self.__private__getsize(self.root)
 
     def __iter__(self):
-        pass
+        q = list()
+        self.buildq(self.root, q, self.min(), self.max())
+        return q.__iter__()
+    def buildq(self, node, queue, lo, hi):
+        if(node == None):
+            return
+        if(lo < node.key):
+            self.buildq(node.left, queue, lo, hi)
+        if(lo <= node.key and node.key <= hi):
+            queue.append(node.key)
+        if(hi > node.key):
+            self.buildq(node.right, queue, lo, hi)
+
 
 if __name__ == '__main__':
     st = Treap()
@@ -125,7 +145,8 @@ if __name__ == '__main__':
     for lines in stdin:
         (key, val) = lines.split(' ')
         st[key]=val
-    for s in st:
-        print("{} {}".format(s, st.get(s)))
-
+        print("_______")
+        for s in st:
+            print("{} {}".format(s, st[s]), end = '')
+        print("^^^^^^^")
 
