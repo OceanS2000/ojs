@@ -51,6 +51,7 @@ class Treap:
         self.root = self.__private__put(key, val, self.root)
 
     def __private__put(self, key, val, node):
+        """插入算法，不允许重复键！"""
         if(node == None):
             return self.Node(key, val)
         if(key < node.key):
@@ -71,6 +72,7 @@ class Treap:
         return self.__private__get(key, self.root)
 
     def __private__get(self, key, node):
+        """查找算法，不存在键的值为None"""
         if(node == None):
             return None
         if(key < node.key):
@@ -85,12 +87,24 @@ class Treap:
         return
 
     def __private__delete(self, key, node):
-        if(node.left == None):
-            return node.right
-        if(node.right == None):
-            return node.left
-        if(node.left.key > node.right.key):
-            self.__private__rotateR(node)
+        """递归的删除算法，删除不存在键不会产生错误！"""
+        if(node == None):
+            return None
+        if(key == node.key):
+            if(node.left == None):
+                return node.right
+            if(node.right == None):
+                return node.left
+            if(node.left.key > node.right.key):
+                node = self.__private__rotateR(node)
+            if(node.left.key < node.right.key):
+                node = self.__private__rotateL(node)
+        if(key < node.key):
+            node.left = self.__private__delete(key, node.left)
+        if(key > node.key):
+            node.right = self.__private__delete(key, node.right)
+        node.size = self.__private__getsize(node.left) + self.__private__getsize(node.right) + 1
+        return node
             
     def __len__(self):
         return self.__private__getsize(self.root)
@@ -116,17 +130,40 @@ class Treap:
         return self.__private__max(node.right)
 
     def rank(self, key):
-        pass
+        """返回键由小到大的排名，从第0名开始计数！"""
+        r = 0
+        return self.__private__rank(key, self.root, r)
+    def __private__rank(self, key, node, rank):
+        if(node == None):
+            raise ValueError("no such key!")
+        if(key == node.key):
+            return self.__private__getsize(node.left)
+        if(key < node.key):
+            return self.__private__rank(key, node.left, rank)
+        if(key > node.key):
+            rank = 1 + self.__private__getsize(node.left) + self.__private__rank(key, node.right, rank)
+            return rank
 
     def select(self, rank):
-        pass
+        return self.__private__select(rank, self.root)
+    def __private__select(self, rank, node):
+        if(node == None):
+            raise ValueError("no such key!")
+        sizeleft = self.__private__getsize(node.left)
+        if(rank == sizeleft):
+            return node.key
+        if(rank < sizeleft):
+            return self.__private__select(rank, node.left)
+        if(rank > sizeleft):
+            return self.__private__select(rank - sizeleft - 1, node.right)
     
     def size(self):
         return self.__private__getsize(self.root)
 
     def __iter__(self):
         q = list()
-        self.buildq(self.root, q, self.min(), self.max())
+        if(self.root != None):
+            self.buildq(self.root, q, self.min(), self.max())
         return q.__iter__()
     def buildq(self, node, queue, lo, hi):
         if(node == None):
@@ -143,10 +180,13 @@ if __name__ == '__main__':
     st = Treap()
     from sys import stdin
     for lines in stdin:
-        (key, val) = lines.split(' ')
-        st[key]=val
+        (flag, key, val) = lines.split(' ')
+        if(flag == '+'):
+            st[int(key)]=val.rstrip()
+        if(flag == '-'):
+            del st[int(key)]
         print("_______")
         for s in st:
-            print("{} {}".format(s, st[s]), end = '')
+            print("{0:<4d} {1:4s}|{2:>2d}".format(s, st[s], st.rank(s)))
         print("^^^^^^^")
 
