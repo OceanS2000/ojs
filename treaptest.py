@@ -15,21 +15,14 @@ class Treap:
         def __repr__(self):
             return key + ' : ' + val
 
-    def __private__getP(self,node):
-        if(node == None):
-            return -1
-        else:
-            return node.priorty
+    def __private__getP(self, node):
+        return node.priorty if node != None else -1
 
     def __private__getsize(self, node):
-        if(node == None):
-            return 0
-        else:
-            return node.size
+        return node.size if node != None else 0
 
     def __init__(self):
         self.root = None
-        self.a = self.Node(1,2)
     
     def __private__rotateR(self, node):
         x = node.left
@@ -48,6 +41,8 @@ class Treap:
         return x
     
     def __setitem__(self, key, val):
+        if(val == None):
+            return self.__private__delete(key, self.root)
         self.root = self.__private__put(key, val, self.root)
 
     def __private__put(self, key, val, node):
@@ -87,7 +82,7 @@ class Treap:
         return
 
     def __private__delete(self, key, node):
-        """递归的删除算法，删除不存在键不会产生错误！"""
+        """递归的删除算法，删除不存在键不会产生错误"""
         if(node == None):
             return None
         if(key == node.key):
