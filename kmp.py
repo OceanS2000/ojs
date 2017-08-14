@@ -5,7 +5,7 @@ class KMP:
     def __init__(self, pat):
         self.pat = pat
         M = len(pat)
-        self.dfa = [[0]*M]*256
+        self.dfa = [[0 for i in range(M)] for j in range(256)]
         self.dfa[pat[0]][0] = 1
         X = 0
         for j in range(M):
