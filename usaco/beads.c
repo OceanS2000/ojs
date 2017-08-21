@@ -27,6 +27,7 @@ int count(int p, int dir)
             color = necklace[i];
         if (color != 'w' && necklace[i] != 'w' && necklace[i] != color)
             break;
+        i = mod(i + dir, len);
     }
     return n;
 }
