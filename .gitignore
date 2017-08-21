@@ -35,3 +35,6 @@
 *~
 #pycache
 __pycache__
+# MacOS files
+.DS_Store
+
